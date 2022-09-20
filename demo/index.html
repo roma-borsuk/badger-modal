@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Badger Modal Demo</title>
+  <link rel="stylesheet" href="../dist/badger-modal.css">
+  <link rel="stylesheet" href="./app.css">
+</head>
+<body>
+  <h2>Default Test Modal</h2>
+  <button type="button" data-modal-target="#exampleModal">Open Example Modal</button>
+  <div
+    class="bm-modal"
+    id="exampleModal"
+    tabindex="-1"
+    aria-hidden="true"
+    aria-labelledby="exampleModalTitle"
+  >
+    <div class="bm-dialog">
+      <div class="bm-content">
+        <div class="bm-header">
+          <button type="button" class="bm-close" data-modal-dismiss aria-label="Close">Close</button>
+        </div>
+        <div class="text-center bm-body">
+          <div class="bm-title" id="exampleModalTitle">Modal Title</div>
+          <div class="bm-text">
+            <p>Modal Text</p>
+          </div>
+          <div class="bm-btns">
+            <button type="button" data-modal-dismiss>Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <br>
+  <br>
+
+  <h2>Centered Test Modal</h2>
+  <button type="button" data-modal-target="#exampleModal2">Open Example Modal</button>
+  <div
+    class="bm-modal"
+    id="exampleModal2"
+    tabindex="-1"
+    aria-hidden="true"
+    aria-labelledby="exampleModal2Title"
+  >
+    <div class="bm-dialog bm-dialog--centered">
+      <div class="bm-content">
+        <div class="bm-header">
+          <button type="button" class="bm-close" data-modal-dismiss aria-label="Close">Close</button>
+        </div>
+        <div class="text-center bm-body">
+          <div class="bm-title" id="exampleModal2Title">Modal Title</div>
+          <div class="bm-text">
+            <p>Modal Text</p>
+          </div>
+          <div class="bm-btns">
+            <button type="button" data-modal-dismiss>Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../dist/badger-modal.js"></script>
+  <script>
+    (() => {
+      const toggleEls = document.querySelectorAll('[data-modal-target]');
+
+      toggleEls.forEach(el => {
+        const modalTarget = el.dataset.modalTarget;
+        const modalEl = document.querySelector(modalTarget);
+
+        if (modalEl) {
+          const modal = new Modal(modalEl);
+
+          el.addEventListener('click', e => {
+            e.preventDefault();
+            modal.show();
+          });
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
