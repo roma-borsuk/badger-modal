@@ -6,23 +6,24 @@ const autoprefixer = require('autoprefixer');
 const cssnano = require('cssnano');
 
 module.exports = {
-    entry: './src/index.js',
+    entry: './src/index.ts',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'badger-modal.js',
-        library: undefined,
-        libraryTarget: 'umd'
+        filename: 'badger-modal.js'
+    },
+    resolve: {
+        extensions: [ '.js', '.jsx', '.ts', '.tsx' ],
     },
     module: {
         rules: [
             {
-                test: /\.m?js$/,
-                exclude: /(node_modules|bower_components)/,
-                use: {
-                    loader: 'babel-loader',
-                    options: {
-                        presets: ['@babel/preset-env']
-                    }
+                test: /\.[jt]sx?$/i,
+                loader: 'babel-loader',
+                options: {
+                    presets: [
+                        '@babel/preset-env',
+                        '@babel/preset-typescript',
+                    ],
                 }
             },
             {
