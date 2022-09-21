@@ -2,138 +2,148 @@ import EventEmitter from 'eventemitter3';
 
 import './index.scss';
 
-const isElement = (obj) => {
-    if (!obj || typeof obj !== 'object') {
-        return false;
-    }
+const isElement = (obj: any) => {
+  if (!obj || typeof obj !== 'object') {
+    return false;
+  }
 
-    return typeof obj.nodeType !== 'undefined';
+  return typeof obj.nodeType !== 'undefined';
 };
 
-const getElement = (obj) => {
-    if (isElement(obj)) {
-        return obj;
-    }
+const getElement = (obj: any): HTMLElement|null => {
+  if (isElement(obj)) {
+    return obj;
+  }
 
-    if (typeof obj === 'string' && obj.length > 0) {
-        return document.querySelector(obj);
-    }
+  if (typeof obj === 'string' && obj.length > 0) {
+    return document.querySelector(obj);
+  }
 
-    return null;
+  return null;
 };
 
-export const Modal = class {
-    #element;
-    #dialog;
-    #dismissEls;
-    #eventEmitter;
+class Modal {
+  #element: HTMLElement;
+  #dialog: HTMLElement;
+  #dismissEls: NodeListOf<HTMLElement>;
+  #eventEmitter: EventEmitter;
 
-    #shown = () => {
-        this.#eventEmitter.emit('shown');
+  #shown = () => {
+    const self = this;
+    self.#eventEmitter.emit('shown');
+    self.#element.removeEventListener('transitionend', this.#shown);
+  };
+  #hidden = () => {
+    const self = this;
+    self.#element.style.display = 'none';
+    self.#element.setAttribute('aria-hidden', '');
+    self.#element.removeAttribute('aria-modal');
+    self.#element.removeAttribute('role');
+    document.documentElement.classList.remove('is-modal-open');
 
-        this.#element.removeEventListener('transitionend', this.#shown);
-    };
-    #hidden = () => {
-        this.#element.style.display = 'none';
-        this.#element.setAttribute('aria-hidden', '');
-        this.#element.removeAttribute('aria-modal');
-        this.#element.removeAttribute('role');
-        document.documentElement.classList.remove('is-modal-open');
+    self.#eventEmitter.emit('hidden');
 
-        this.#eventEmitter.emit('hidden');
+    self.#element.removeEventListener('transitionend', self.#hidden);
+    self.#element.removeEventListener('click', self.#modalClick);
+    document.removeEventListener('keyup', self.#escClick);
+    self.#dismissEls.forEach(el => {
+      el.removeEventListener('click', self.#dismissClick);
+    });
+  };
+  #modalClick = (e: Event) => {
+    const self = this;
+    const element = e.target as HTMLElement;
 
-        this.#element.removeEventListener('transitionend', this.#hidden);
-        this.#element.removeEventListener('click', this.#modalClick);
-        document.removeEventListener('keyup', this.#escClick);
-        this.#dismissEls.forEach(el => {
-            el.removeEventListener('click', this.#dismissClick);
-        });
-    };
-    #modalClick = (e) => {
-        const element = e.target;
+    if (element === self.#element) {
+      self.hide();
+    }
+  };
+  #dismissClick = (e: Event) => {
+    const self = this;
+    e.preventDefault();
+    self.hide();
+  };
+  #escClick = (e: KeyboardEvent) => {
+    const self = this;
+    if (e.key === "Escape") {
+      self.hide();
+    }
+  };
 
-        if (element === this.#element) {
-            this.hide();
-        }
-    };
-    #dismissClick = (e) => {
-        e.preventDefault();
-        this.hide();
-    };
-    #escClick = (e) => {
-        if (e.key === "Escape") {
-            this.hide();
-        }
-    };
+  static instances: Map<HTMLElement, Modal> = new Map();
 
-    static instances = new Map();
+  static getInstance(element: HTMLElement) {
+    return Modal.instances.get(element);
+  }
 
-    static getInstance(element) {
-        return Modal.instances.get(element);
+  constructor(element: HTMLElement | string) {
+    this.#element = getElement(element)!;
+
+    if (!this.#element) {
+      throw new Error(`Modal element ${element} doesn't exist.`);
     }
 
-    constructor(element) {
-        this.#element = getElement(element);
+    this.#eventEmitter = new EventEmitter();
 
-        if (!this.#element) {
-            throw new Error(`Modal element ${element} doesn't exist.`);
-        }
+    Modal.instances.set(this.#element, this);
 
-        this.#eventEmitter = new EventEmitter();
+    this.#dialog = this.#element.querySelector('.m-dialog')!;
+    this.#dismissEls = this.#element.querySelectorAll('[data-modal-dismiss]')!;
+  }
 
-        Modal.instances.set(this.#element, this);
+  show() {
+    const self = this;
+    self.#eventEmitter.emit('show');
 
-        this.#dialog = this.#element.querySelector('.m-dialog');
-        this.#dismissEls = this.#element.querySelectorAll('[data-modal-dismiss]');
-    }
+    document.documentElement.classList.add('is-modal-open');
 
-    show() {
-        this.#eventEmitter.emit('show');
+    self.#element.style.display = 'block';
+    self.#element.removeAttribute('aria-hidden');
+    self.#element.setAttribute('aria-modal', '');
+    self.#element.setAttribute('role', 'dialog');
+    self.#element.scrollTop = 0;
 
-        document.documentElement.classList.add('is-modal-open');
+    self.#element.classList.add('is-shown');
 
-        this.#element.style.display = 'block';
-        this.#element.removeAttribute('aria-hidden');
-        this.#element.setAttribute('aria-modal', '');
-        this.#element.setAttribute('role', 'dialog');
-        this.#element.scrollTop = 0;
+    self.#dismissEls.forEach(el => {
+        el.addEventListener('click', self.#dismissClick, false);
+    });
+    self.#element.addEventListener('click', self.#modalClick, false);
+    document.addEventListener('keyup', self.#escClick, false);
+    self.#element.addEventListener('transitionend', self.#shown, false);
+  }
 
-        this.#element.classList.add('is-shown');
+  hide() {
+    const self = this;
+    self.#eventEmitter.emit('hide');
 
-        this.#dismissEls.forEach(el => {
-            el.addEventListener('click', this.#dismissClick, false);
-        });
-        this.#element.addEventListener('click', this.#modalClick, false);
-        document.addEventListener('keyup', this.#escClick, false);
-        this.#element.addEventListener('transitionend', this.#shown, false);
-    }
+    self.#element.classList.remove('is-shown');
+    self.#element.addEventListener('transitionend', self.#hidden, false);
+  }
 
-    hide() {
-        this.#eventEmitter.emit('hide');
+  onShow(callback: () => void) {
+    const self = this;
+    self.#eventEmitter.on('show', callback);
+    return () => self.#eventEmitter.off('show', callback);
+  }
 
-        this.#element.classList.remove('is-shown');
-        this.#element.addEventListener('transitionend', this.#hidden, false);
-    }
+  onHide(callback: () => void) {
+    const self = this;
+    self.#eventEmitter.on('hide', callback);
+    return () => self.#eventEmitter.off('hide', callback);
+  }
 
-    onShow(callback) {
-        this.#eventEmitter.on('show', callback);
-        return () => this.#eventEmitter.off('show', callback);
-    }
+  onShown(callback: () => void) {
+    const self = this;
+    self.#eventEmitter.on('shown', callback);
+    return () => self.#eventEmitter.off('shown', callback);
+  }
 
-    onHide(callback) {
-        this.#eventEmitter.on('hide', callback);
-        return () => this.#eventEmitter.off('hide', callback);
-    }
-
-    onShown(callback) {
-        this.#eventEmitter.on('shown', callback);
-        return () => this.#eventEmitter.off('shown', callback);
-    }
-
-    onHidden(callback) {
-        this.#eventEmitter.on('hidden', callback);
-        return () => this.#eventEmitter.off('hidden', callback);
-    }
+  onHidden(callback: () => void) {
+    const self = this;
+    self.#eventEmitter.on('hidden', callback);
+    return () => self.#eventEmitter.off('hidden', callback);
+  }
 };
 
 export default Modal;
