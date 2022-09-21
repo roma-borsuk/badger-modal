@@ -1,6 +1,6 @@
 {
   "name": "badger-modal",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Accessible modal dialog Pure JS Component",
   "main": "./dist/badger-modal.js",
   "module": "./dist/badger-modal.js",
