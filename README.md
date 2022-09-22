@@ -47,7 +47,7 @@ Use styles and scripts:
 
 Or import via ES modules:
 ``` javascript
-import Modal from 'badger-modal';
+import BModal from 'badger-modal';
 ```
 
 To initialise:
