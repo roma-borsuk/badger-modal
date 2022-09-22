@@ -1,7 +1,5 @@
 import EventEmitter from 'eventemitter3';
 
-import './index.scss';
-
 const isElement = (obj: any) => {
   if (!obj || typeof obj !== 'object') {
     return false;
@@ -22,7 +20,7 @@ const getElement = (obj: any): HTMLElement|null => {
   return null;
 };
 
-class Modal {
+export default class Modal {
   #element: HTMLElement;
   #dialog: HTMLElement;
   #dismissEls: NodeListOf<HTMLElement>;
@@ -106,7 +104,7 @@ class Modal {
     self.#element.classList.add('is-shown');
 
     self.#dismissEls.forEach(el => {
-        el.addEventListener('click', self.#dismissClick, false);
+      el.addEventListener('click', self.#dismissClick, false);
     });
     self.#element.addEventListener('click', self.#modalClick, false);
     document.addEventListener('keyup', self.#escClick, false);
@@ -145,5 +143,3 @@ class Modal {
     return () => self.#eventEmitter.off('hidden', callback);
   }
 };
-
-export default Modal;

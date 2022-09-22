@@ -2,8 +2,8 @@
   "name": "badger-modal",
   "version": "1.0.1",
   "description": "Accessible modal dialog Pure JS Component",
-  "main": "./dist/badger-modal.js",
-  "module": "./dist/badger-modal.js",
+  "main": "./dist/badger-modal.cjs.js",
+  "types": "./dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/roma-borsuk/badger-modal.git"
@@ -52,8 +52,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --config webpack.config.js",
-    "prepack": "yarn build",
-    "docs": "webpack --config webpack.config.js && cp ./dist/badger-modal.css ./docs &&  cp ./dist/badger-modal.js ./docs"
+    "build": "webpack --mode=production",
+    "dev": "webpack --mode=development",
+    "prepack": "yarn build"
   }
 }
