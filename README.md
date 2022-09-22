@@ -1,6 +1,6 @@
 # Badger Modal
 [![Check](https://github.com/roma-borsuk/badger-modal/actions/workflows/check.yml/badge.svg)](https://github.com/roma-borsuk/badger-modal/actions/workflows/check.yml)
-[![Deploy to Pages](https://github.com/roma-borsuk/badger-modal/actions/workflows/pages.yml/badge.svg)](https://roma-borsuk.github.io/badger-modal)
+[![Deploy to Pages](https://github.com/roma-borsuk/badger-modal/actions/workflows/pages.yml/badge.svg?branch=pages)](https://roma-borsuk.github.io/badger-modal)
 [![npm version](https://badge.fury.io/js/badger-modal.svg)](https://badge.fury.io/js/badger-modal)
 
 ## Demo
