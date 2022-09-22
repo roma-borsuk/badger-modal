@@ -2,8 +2,8 @@ name: Deploy to Pages
 
 on:
   push:
-    tags:
-    - '*'
+    branches:
+      - pages
 
 permissions:
   contents: read
