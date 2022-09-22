@@ -34,6 +34,7 @@ const config = {
 };
 
 module.exports = [
+  // JS
   {
     ...config,
     output: {
@@ -46,13 +47,20 @@ module.exports = [
       filename: 'badger-modal.js'
     },
   },
+
+  // CJS JS
   {
     ...config,
     output: {
+      library: {
+        type: 'commonjs',
+      },
       path: path.resolve(__dirname, 'dist'),
       filename: 'badger-modal.cjs.js'
     },
   },
+
+  // Css
   {
     entry: './src/index.scss',
     output: {

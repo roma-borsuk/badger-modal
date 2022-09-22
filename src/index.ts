@@ -20,7 +20,7 @@ const getElement = (obj: any): HTMLElement|null => {
   return null;
 };
 
-export default class Modal {
+class BModal {
   #element: HTMLElement;
   #dialog: HTMLElement;
   #dismissEls: NodeListOf<HTMLElement>;
@@ -68,10 +68,10 @@ export default class Modal {
     }
   };
 
-  static instances: Map<HTMLElement, Modal> = new Map();
+  static instances: Map<HTMLElement, BModal> = new Map();
 
   static getInstance(element: HTMLElement) {
-    return Modal.instances.get(element);
+    return BModal.instances.get(element);
   }
 
   constructor(element: HTMLElement | string) {
@@ -83,7 +83,7 @@ export default class Modal {
 
     this.#eventEmitter = new EventEmitter();
 
-    Modal.instances.set(this.#element, this);
+    BModal.instances.set(this.#element, this);
 
     this.#dialog = this.#element.querySelector('.m-dialog')!;
     this.#dismissEls = this.#element.querySelectorAll('[data-modal-dismiss]')!;
@@ -143,3 +143,5 @@ export default class Modal {
     return () => self.#eventEmitter.off('hidden', callback);
   }
 };
+
+export default BModal;
