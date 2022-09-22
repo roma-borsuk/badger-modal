@@ -1,3 +1,4 @@
+const IgnoreEmitPlugin = require('ignore-emit-webpack-plugin');
 const path = require('path');
 const sassImporter = require('node-sass-magic-importer');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -37,7 +38,7 @@ module.exports = [
     ...config,
     output: {
       library: {
-        name: 'Modal',
+        name: 'BModal',
         type: 'window',
         export: 'default'
       },
@@ -93,7 +94,8 @@ module.exports = [
     plugins: [
       new MiniCssExtractPlugin({
         filename: 'badger-modal.css'
-      })
+      }),
+      new IgnoreEmitPlugin('main.js')
     ],
   }
 ]

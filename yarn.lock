@@ -1981,6 +1981,7 @@ __metadata:
     css-loader: ^6.7.1
     cssnano: ^5.1.13
     eventemitter3: ^4.0.7
+    ignore-emit-webpack-plugin: ^2.0.6
     mini-css-extract-plugin: ^2.6.1
     node-sass-magic-importer: ^5.3.2
     postcss-loader: ^7.0.1
@@ -3457,6 +3458,13 @@ __metadata:
   peerDependencies:
     postcss: ^8.1.0
   checksum: 5c324d283552b1269cfc13a503aaaa172a280f914e5b81544f3803bc6f06a3b585fb79f66f7c771a2c052db7982c18bf92d001e3b47282e3abbbb4c4cc488d68
+  languageName: node
+  linkType: hard
+
+"ignore-emit-webpack-plugin@npm:^2.0.6":
+  version: 2.0.6
+  resolution: "ignore-emit-webpack-plugin@npm:2.0.6"
+  checksum: 544fd16d598e4d6733a4e828e3f2a22bad04ed365a6a6d46c452959575b8bf130127a9175968c7f8461cd439d0b7363eadfe5af28f930532b52157f23d30bbf6
   languageName: node
   linkType: hard
 
